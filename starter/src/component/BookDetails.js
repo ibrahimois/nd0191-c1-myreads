@@ -1,9 +1,11 @@
-import React from "react";
+import { React, useState } from "react";
 
 function BookDetails({ book, handleChangingShelf }) {
+  const [normValue, setNormValue] = useState(book.shelf)
   const handleChangeSelection = (e) => {
     const value = e.target.value;
-    handleChangingShelf(value);
+    handleChangingShelf(book, value);
+    setNormValue(value)
   };
 
   return (
@@ -23,6 +25,7 @@ function BookDetails({ book, handleChangingShelf }) {
               onChange={(e) => {
                 handleChangeSelection(e);
               }}
+              defaultValue={book.shelf}
             >
               <option value="none" disabled>
                 Move to...

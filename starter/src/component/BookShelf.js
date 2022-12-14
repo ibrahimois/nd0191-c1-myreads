@@ -1,6 +1,5 @@
 import React from "react";
 import BookDetails from "./BookDetails";
-
 function BookShelf({ title, books, handleChangingShelf }) {
   return (
     <div className="bookshelf">
@@ -21,5 +20,6 @@ function BookShelf({ title, books, handleChangingShelf }) {
     </div>
   );
 }
+
 
 export default BookShelf;

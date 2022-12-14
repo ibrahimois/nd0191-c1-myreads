@@ -24,8 +24,16 @@ function App() {
     setShowSearchpage(!showSearchPage);
   };
 
-  const handleChangingShelf = (value) => {
-    console.log(value);
+  const handleChangingShelf = (book, value) => {
+    BooksAPI.update(book, value)
+    const newState = books.map(obj => {
+      console.log(obj.id, book.id)
+      if (obj.id === book.id) {
+        return { ...obj, shelf: value }
+      }
+      return obj
+    })
+    setBooks(newState)
   };
 
   return (
@@ -36,8 +44,8 @@ function App() {
         <MainPage
           books={books}
           handleOpenSearch={handleOpenSearch}
-          handleChangingShelf={(value) => {
-            handleChangingShelf(value);
+          handleChangingShelf={(book, value) => {
+            handleChangingShelf(book, value);
           }}
         />
       )}
