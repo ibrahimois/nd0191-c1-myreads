@@ -1,15 +1,12 @@
-import { React, useState } from "react";
+import { React } from "react";
 
 function BookDetails({ book, handleChangingShelf }) {
-  const [normValue, setNormValue] = useState(book.shelf)
   const handleChangeSelection = (e) => {
-    const value = e.target.value;
-    handleChangingShelf(book, value);
-    setNormValue(value)
+    handleChangingShelf(book, e.target.value);
   };
 
   return (
-    <li>
+    <li key={book.id}>
       <div className="book">
         <div className="book-top">
           <div
@@ -21,24 +18,42 @@ function BookDetails({ book, handleChangingShelf }) {
             }}
           ></div>
           <div className="book-shelf-changer">
-            <select
+            {book.shelf ? <select
               onChange={(e) => {
                 handleChangeSelection(e);
               }}
-              defaultValue={book.shelf}
+              defaultValue={book.shelf ? book.shelf : "none"}
             >
-              <option value="none" disabled>
+              <option value="move" disabled>
                 Move to...
               </option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>
               <option value="read">Read</option>
               <option value="none">None</option>
-            </select>
+            </select> : <select
+              onChange={(e) => {
+                handleChangeSelection(e);
+              }}
+              defaultValue={book.shelf ? book.shelf : "add"}
+            >
+              <option value="add" disabled>
+                Add to...
+              </option>
+              <option value="currentlyReading">Currently Reading</option>
+              <option value="wantToRead">Want to Read</option>
+              <option value="read">Read</option>
+            </select>}
+
           </div>
         </div>
         <div className="book-title">{book.title}</div>
-        <div className="book-authors">{book.authors[0]}</div>
+        <div className="book-authors">{
+          book.authors.map((author, index) => {
+            if (index === book.authors.length - 1) return author;
+            return author + ", ";
+          })
+        }</div>
       </div>
     </li>
   );

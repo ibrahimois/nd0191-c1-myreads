@@ -3,31 +3,30 @@ import { useState, useEffect } from "react";
 import MainPage from "./component/MainPage";
 import Search from "./component/Search";
 import * as BooksAPI from "./BooksAPI";
+import { Route, Routes } from "react-router-dom";
 function App() {
-  const [showSearchPage, setShowSearchpage] = useState(false);
   const [books, setBooks] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("")
+  const [searchedBooks, setSearchedBooks] = useState([])
 
   useEffect(() => {
     const getBooks = async () => {
       const res = await BooksAPI.getAll();
       setBooks(res);
-      console.log(res);
     };
     getBooks();
   }, []);
 
-  const handleOpenSearch = () => {
-    setShowSearchpage(!showSearchPage);
-  };
-
-  const handleCloseSearch = () => {
-    setShowSearchpage(!showSearchPage);
+  const handleCloseSearch = async () => {
+    const updatedBooks = await BooksAPI.getAll();
+    setBooks(updatedBooks)
+    setSearchTerm("")
+    setSearchedBooks([])
   };
 
   const handleChangingShelf = (book, value) => {
     BooksAPI.update(book, value)
     const newState = books.map(obj => {
-      console.log(obj.id, book.id)
       if (obj.id === book.id) {
         return { ...obj, shelf: value }
       }
@@ -36,20 +35,48 @@ function App() {
     setBooks(newState)
   };
 
+  const handleSearching = async (searchTerm) => {
+    setSearchTerm(searchTerm)
+    if (searchTerm !== "") {
+      const res = await BooksAPI.search(searchTerm);
+      const migratedBooks = res.map((book) => {
+        let foundBook = books.find(tempBook => tempBook.id === book.id)
+        if (foundBook) {
+          return foundBook;
+        } else {
+          return book
+        }
+      })
+      setSearchedBooks(migratedBooks)
+    } else {
+      setSearchedBooks([])
+    }
+  }
+
   return (
-    <div className="app">
-      {showSearchPage ? (
-        <Search handleCloseSearch={handleCloseSearch} />
-      ) : (
+    <Routes>
+      <Route exact path="/" element={
         <MainPage
           books={books}
-          handleOpenSearch={handleOpenSearch}
+          handleChangingShelf={(book, value) => {
+            handleChangingShelf(book, value);
+          }} />}
+      />
+      <Route path="/Search" element={
+        <Search
+          handleCloseSearch={handleCloseSearch}
+          books={searchedBooks}
           handleChangingShelf={(book, value) => {
             handleChangingShelf(book, value);
           }}
-        />
-      )}
-    </div>
+          handleSearching={(searchTerm) => {
+            handleSearching(searchTerm)
+          }}
+          searchTerm={searchTerm} />
+      }
+      />
+
+    </Routes>
   );
 }
 

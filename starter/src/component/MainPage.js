@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 import BookShelf from "./BookShelf";
 
-function MainPage({ books, handleOpenSearch, handleChangingShelf }) {
+function MainPage({ books, handleChangingShelf }) {
   return (
     <div className="list-books">
       <div className="list-books-title">
@@ -27,7 +28,7 @@ function MainPage({ books, handleOpenSearch, handleChangingShelf }) {
         </div>
       </div>
       <div className="open-search">
-        <a onClick={handleOpenSearch}>Add a book</a>
+        <Link to="/Search">Add a book</Link>
       </div>
     </div>
   );
