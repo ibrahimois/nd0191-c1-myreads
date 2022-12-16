@@ -39,18 +39,20 @@ function App() {
     setSearchTerm(searchTerm)
     if (searchTerm !== "") {
       const res = await BooksAPI.search(searchTerm);
-      const migratedBooks = res.map((book) => {
-        let foundBook = books.find(tempBook => tempBook.id === book.id)
-        if (foundBook) {
-          return foundBook;
-        } else {
-          return book
-        }
-      })
-      setSearchedBooks(migratedBooks)
-    } else {
-      setSearchedBooks([])
+      if (res.length > 0) {
+        const migratedBooks = res.map((book) => {
+          let foundBook = books.find(tempBook => tempBook.id === book.id)
+          if (foundBook) {
+            return foundBook;
+          } else {
+            return book
+          }
+        })
+        setSearchedBooks(migratedBooks)
+        return;
+      }
     }
+    setSearchedBooks([])
   }
 
   return (

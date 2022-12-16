@@ -4,7 +4,6 @@ function BookDetails({ book, handleChangingShelf }) {
   const handleChangeSelection = (e) => {
     handleChangingShelf(book, e.target.value);
   };
-
   return (
     <li key={book.id}>
       <div className="book">

@@ -20,15 +20,16 @@ function Search({ handleCloseSearch, books, handleChangingShelf, handleSearching
       </div>
       <div className="search-books-results">
         <ol className="books-grid">
-          {books.map((book, index) => {
-            return (
-              <BookDetails
-                book={book}
-                key={index}
-                handleChangingShelf={handleChangingShelf}
-              />
-            );
-          })}
+          {books.filter(book => book.authors !== undefined && book.imageLinks !== undefined)
+            .map((book, index) => {
+              return (
+                <BookDetails
+                  book={book}
+                  key={index}
+                  handleChangingShelf={handleChangingShelf}
+                />
+              );
+            })}
         </ol>
       </div>
     </div>
